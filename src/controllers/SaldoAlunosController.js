@@ -22,7 +22,7 @@ function paraDatetimeMySQL(texto) {
   return existe ? `${m[1]}-${m[2]}-${m[3]} ${m[4]}:${m[5]}:${m[6]}` : null;
 }
 
-const paraISO = (dt) => (dt ? dt.replace(" ", "T") : null);
+const transformarParaISO = (dt) => (dt ? dt.replace(" ", "T") : null);
 
 export const buscarSaldo = async (req, res) => {
   try {
@@ -77,9 +77,9 @@ export const buscarSaldo = async (req, res) => {
       matricula: aluno.matricula,
       nome: aluno.nome,
       saldo: aluno.saldo === null ? null : Number(aluno.saldo),
-      DHAtualizacaoSaldo: paraISO(aluno.saldo_atualizado_em),
+      DHAtualizacaoSaldo: transformarParaISO(aluno.saldo_atualizado_em),
       strQrCode: qrMudou ? aluno.qrcode : null,
-      foto: fotoMudou ? aluno.foto : null,
+      foto: fotoMudou ? aluno.foto : null,  
     });
   } catch (error) {
     console.error(error);

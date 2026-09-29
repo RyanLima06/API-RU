@@ -1,3 +1,8 @@
+-- saldo, nome e DHAtualizacaoSaldo vão SEMPRE.
+-- foto: enviada só se foto_atualizada_em > data (senão null).
+-- strQrCode: QR code MAIS RECENTE do aluno, só se gerado_em > data (senão null).
+
+
 -- matrícula     foto   saldo   qrcodes  cenário
 -- 20251200001   sim    sim     2        tudo mudou (exemplo da especificação)
 -- 20251200002   não    não     0        nada mudou
