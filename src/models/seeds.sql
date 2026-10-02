@@ -1,8 +1,12 @@
+-- =====================================================================
+-- Dados de teste do RU, com a foto salva no banco (MEDIUMBLOB)
+-- Requer a tabela alunos com:  foto MEDIUMBLOB NULL
+--
+-- Regras da sincronização:
 -- saldo, nome e DHAtualizacaoSaldo vão SEMPRE.
 -- foto: enviada só se foto_atualizada_em > data (senão null).
 -- strQrCode: QR code MAIS RECENTE do aluno, só se gerado_em > data (senão null).
-
-
+--
 -- matrícula     foto   saldo   qrcodes  cenário
 -- 20251200001   sim    sim     2        tudo mudou (exemplo da especificação)
 -- 20251200002   não    não     0        nada mudou
@@ -24,6 +28,7 @@
 -- 20251200018   não    não     0        tudo muito antigo (2025)
 -- 20251200019   sim    não     0        acentos/utf8mb4 + foto de hoje
 -- 20251200020   não    não     1        mesmo dia da sync: QR 06:00 (não) e 18:30 (sim)
+-- =====================================================================
 
 USE ru_teste;
 SET NAMES utf8mb4;
@@ -34,32 +39,41 @@ DELETE FROM qrcodes;
 DELETE FROM saldos;
 DELETE FROM alunos;
 ALTER TABLE qrcodes AUTO_INCREMENT = 1;
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE qrcodes;
+TRUNCATE TABLE saldos;
+TRUNCATE TABLE alunos;
+SET FOREIGN_KEY_CHECKS = 1;
 
--- ---------------------------------------------------------------------
--- ALUNOS
--- ---------------------------------------------------------------------
+SET @foto_padrao = FROM_BASE64(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+);
+
+-- =====================================================================
+-- ALUNOS (20 fictícios)
+-- Data base para os testes de sincronização: 2026-09-20 08:00:00
+-- =====================================================================
 INSERT INTO alunos (matricula, nome, foto, foto_atualizada_em) VALUES
-('20251200001', 'Ana Beatriz Lima Souza',          'fotos/20251200001.jpg', '2026-09-22 09:15:00'),
-('20251200002', 'Bruno Henrique Carvalho Melo',    'fotos/20251200002.jpg', '2026-03-10 14:20:00'),
-('20251200003', 'Camila Ferreira Andrade',         'fotos/20251200003.jpg', '2026-09-22 16:45:00'),
-('20251200004', 'Diego Almeida Rocha',             'fotos/20251200004.jpg', '2026-02-05 10:00:00'),
-('20251200005', 'Eduarda Nogueira Prado',          'fotos/20251200005.jpg', '2026-05-18 11:30:00'),
-('20251200006', 'Felipe Augusto Barros',           'fotos/20251200006.jpg', '2026-09-21 08:10:00'),
-('20251200007', 'Gabriela Torres Vasconcelos',     'fotos/20251200007.jpg', '2026-09-23 15:00:00'),
-('20251200008', 'Heitor Monteiro Lacerda',         'fotos/20251200008.jpg', '2026-04-02 09:45:00'),
-('20251200009', 'Isabela Duarte Cavalcante',       'fotos/20251200009.jpg', '2026-06-30 13:00:00'),
-('20251200010', 'João Pedro Xavier Teles',         'fotos/20251200010.jpg', '2026-07-14 17:25:00'),
-('20251200011', 'Karina Menezes Bezerra',          'fotos/20251200011.jpg', '2026-09-24 08:30:00'),
-('20251200012', 'Lucas Gabriel Sampaio Neto',      'fotos/20251200012.jpg', '2026-09-20 08:00:00'),
-('20251200013', 'Mariana Peixoto Guedes',          'fotos/20251200013.jpg', '2026-09-20 08:00:01'),
-('20251200014', 'Natália Rangel Pinheiro',         'fotos/20251200014.jpg', '2026-09-20 07:59:59'),
-('20251200015', 'Otávio Brandão Fontenele',        'fotos/20251200015.jpg', '2026-08-12 12:00:00'),
-('20251200016', 'Paula Regina Coutinho Alves',     'fotos/20251200016.jpg', '2026-08-25 18:40:00'),
-('20251200017', 'Rafael Sousa Benevides',          'fotos/20251200017.jpg', '2026-01-20 08:15:00'),
-('20251200018', 'Sabrina Lopes Aragão',            'fotos/20251200018.jpg', '2025-02-17 10:00:00'),
-('20251200019', 'Iara Conceição Araújo Pêgo',      'fotos/20251200019.jpg', '2026-09-24 08:00:00'),
-('20251200020', 'Ulisses Cândido Marques',         'fotos/20251200020.jpg', '2026-05-05 09:00:00');
-
+('20251200001', 'Ana Beatriz Lima Souza',        @foto_padrao, '2026-09-22 09:15:00'), -- Foto MUDOU (> 08:00)
+('20251200002', 'Bruno Henrique Carvalho Melo',  @foto_padrao, '2026-03-10 14:20:00'), -- Foto NÃO mudou
+('20251200003', 'Camila Ferreira Andrade',       @foto_padrao, '2026-09-22 16:45:00'), -- Foto MUDOU (> 08:00)
+('20251200004', 'Diego Almeida Rocha',           @foto_padrao, '2026-02-05 10:00:00'), -- Foto NÃO mudou
+('20251200005', 'Eduarda Nogueira Prado',        @foto_padrao, '2026-05-18 11:30:00'), -- Foto NÃO mudou
+('20251200006', 'Felipe Augusto Barros',         @foto_padrao, '2026-09-21 08:10:00'), -- Foto MUDOU (> 08:00)
+('20251200007', 'Gabriela Torres Vasconcelos',   @foto_padrao, '2026-09-23 15:00:00'), -- Foto MUDOU (> 08:00)
+('20251200008', 'Heitor Monteiro Lacerda',       @foto_padrao, '2026-04-02 09:45:00'), -- Foto NÃO mudou
+('20251200009', 'Isabela Duarte Cavalcante',     @foto_padrao, '2026-06-30 13:00:00'), -- Foto NÃO mudou
+('20251200010', 'João Pedro Xavier Teles',       @foto_padrao, '2026-07-14 17:25:00'), -- Foto NÃO mudou
+('20251200011', 'Karina Menezes Bezerra',        @foto_padrao, '2026-09-24 08:30:00'), -- Foto MUDOU (> 08:00)
+('20251200012', 'Lucas Gabriel Sampaio Neto',    @foto_padrao, '2026-09-20 08:00:00'), -- Foto LIMITE EXATO
+('20251200013', 'Mariana Peixoto Guedes',        @foto_padrao, '2026-09-20 08:00:01'), -- Foto LIMITE +1s
+('20251200014', 'Natália Rangel Pinheiro',       @foto_padrao, '2026-09-20 07:59:59'), -- Foto LIMITE -1s
+('20251200015', 'Otávio Brandão Fontenele',      @foto_padrao, '2026-08-12 12:00:00'), -- Foto NÃO mudou
+('20251200016', 'Paula Regina Coutinho Alves',   @foto_padrao, '2026-08-25 18:40:00'), -- Foto NÃO mudou
+('20251200017', 'Rafael Sousa Benevides',        @foto_padrao, '2026-01-20 08:15:00'), -- Foto NÃO mudou
+('20251200018', 'Sabrina Lopes Aragão',          @foto_padrao, '2025-02-17 10:00:00'), -- Foto antiga
+('20251200019', 'Iara Conceição Araújo Pêgo',    @foto_padrao, '2026-09-24 08:00:00'), -- Foto MUDOU (> 08:00)
+('20251200020', 'Ulisses Cândido Marques',       @foto_padrao, '2026-05-05 09:00:00'); -- Foto NÃO mudou
 -- ---------------------------------------------------------------------
 -- SALDOS  (DECIMAL(10,2))
 -- Sem linha para 20251200009 e 20251200011 de propósito.
@@ -87,6 +101,7 @@ INSERT INTO saldos (matricula, saldo, atualizado_em) VALUES
 ('20251200020',  52.10, '2026-09-18 12:30:00');
 
 -- ---------------------------------------------------------------------
+-- QRCODES
 -- Sem QR code para 20251200010 e 20251200011 de propósito.
 -- ---------------------------------------------------------------------
 INSERT INTO qrcodes (matricula, codigo, gerado_em) VALUES
@@ -114,7 +129,7 @@ INSERT INTO qrcodes (matricula, codigo, gerado_em) VALUES
 -- 015 e 016: antigos
 ('20251200015', 'RU-20251200015-01', '2026-09-09 11:30:00'),
 ('20251200016', 'RU-20251200016-01', '2026-09-08 11:30:00'),
--- 017: cinco códigos, inseridos fora de ordem 
+-- 017: cinco códigos, inseridos fora de ordem
 ('20251200017', 'RU-20251200017-05', '2026-09-24 11:30:00'),
 ('20251200017', 'RU-20251200017-01', '2026-08-30 11:30:00'),
 ('20251200017', 'RU-20251200017-03', '2026-09-21 11:30:00'),
@@ -128,8 +143,30 @@ INSERT INTO qrcodes (matricula, codigo, gerado_em) VALUES
 ('20251200020', 'RU-20251200020-02', '2026-09-20 18:30:00');
 
 SET SQL_SAFE_UPDATES = 1;
+
+-- ---------------------------------------------------------------------
+-- Conferência
+-- ---------------------------------------------------------------------
 SELECT
     (SELECT COUNT(*) FROM alunos)  AS alunos,
     (SELECT COUNT(*) FROM saldos)  AS saldos,
     (SELECT COUNT(*) FROM qrcodes) AS qrcodes,
-    (SELECT COUNT(*) FROM alunos WHERE matricula NOT REGEXP '^[0-9]{11}$') AS matriculas_invalidas;
+    (SELECT COUNT(*) FROM alunos WHERE matricula NOT REGEXP '^[0-9]{11}$') AS matriculas_invalidas,
+    (SELECT COUNT(*) FROM alunos WHERE foto IS NULL OR LENGTH(foto) = 0)   AS fotos_vazias;
+
+-- Tamanho de cada foto, sem trafegar o binário:
+-- SELECT matricula, LENGTH(foto) AS bytes FROM alunos ORDER BY matricula;
+
+-- Teste da sincronização (data de corte = 2026-09-20 08:00:00):
+-- SELECT
+--     a.matricula,
+--     a.nome,
+--     CASE WHEN a.foto_atualizada_em > '2026-09-20 08:00:00' THEN a.foto END AS foto,
+--     s.saldo,
+--     s.atualizado_em AS DHAtualizacaoSaldo,
+--     (SELECT q.codigo FROM qrcodes q
+--       WHERE q.matricula = a.matricula AND q.gerado_em > '2026-09-20 08:00:00'
+--       ORDER BY q.gerado_em DESC LIMIT 1) AS strQrCode
+-- FROM alunos a
+-- LEFT JOIN saldos s ON s.matricula = a.matricula
+-- ORDER BY a.matricula;

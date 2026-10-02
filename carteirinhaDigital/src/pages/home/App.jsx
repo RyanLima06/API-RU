@@ -107,7 +107,7 @@ function Cracha({ dados, carregando, erro, onAtualizar, onTrocar }) {
       <div className="cracha-topo">
         <div className="cracha-foto">
           {foto ? (
-            <img src={foto} alt={`Foto de ${dados.nome}`} />
+            <img src={foto} alt={`Foto de ${dados.nome}`} /> // <-- Usar 'foto' processada
           ) : (
             <div className="cracha-foto-vazia" aria-hidden="true" />
           )}

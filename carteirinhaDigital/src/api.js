@@ -36,9 +36,12 @@ export function limparCache() {
 }
 
 // Monta a URL completa da foto (o backend devolve um caminho relativo, ex.: "fotos/xxx.jpg")
-export function urlDaFoto(caminhoRelativo) {
-  if (!caminhoRelativo) return null;
-  return `${API_URL}/${caminhoRelativo}`;
+export function urlDaFoto(caminhoOuBase64) {
+  if (!caminhoOuBase64) return null;
+  if (caminhoOuBase64.startsWith("data:")) {
+    return caminhoOuBase64;
+  }
+  return `${API_URL}/${caminhoOuBase64}`;
 }
 
 export async function buscarSaldo(matricula, cacheAnterior) {

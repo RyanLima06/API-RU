@@ -7,36 +7,28 @@ CREATE DATABASE ru_teste
 
 USE ru_teste;
 CREATE TABLE alunos (
-    matricula           VARCHAR(20)  NOT NULL,
-    nome                VARCHAR(120) NOT NULL,
-    foto                VARCHAR(255) NOT NULL,
-    foto_atualizada_em  DATETIME     NOT NULL,
-    PRIMARY KEY (matricula)
-) ENGINE=InnoDB;
-CREATE TABLE saldos (
-    matricula      VARCHAR(20)   NOT NULL,
-    saldo          DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    atualizado_em  DATETIME      NOT NULL,
-    PRIMARY KEY (matricula),
-    CONSTRAINT fk_saldos_alunos
-        FOREIGN KEY (matricula) REFERENCES alunos (matricula)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-) ENGINE=InnoDB;
+  matricula VARCHAR(11) NOT NULL PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  foto MEDIUMBLOB NULL,
+  foto_atualizada_em DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 2. Tabela de saldos (Decimal para evitar erros de arredondamento)
+CREATE TABLE saldos (
+  matricula VARCHAR(11) NOT NULL PRIMARY KEY,
+  saldo DECIMAL(10,2) NOT NULL,
+  atualizado_em DATETIME NOT NULL,
+  CONSTRAINT fk_saldos_alunos FOREIGN KEY (matricula) REFERENCES alunos(matricula) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 3. Tabela de QR codes
 CREATE TABLE qrcodes (
-    id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    matricula  VARCHAR(20)  NOT NULL,
-    codigo     VARCHAR(64)  NOT NULL,
-    gerado_em  DATETIME     NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY uq_qrcodes_codigo (codigo),
-    KEY idx_qrcodes_matricula (matricula),
-    CONSTRAINT fk_qrcodes_alunos
-        FOREIGN KEY (matricula) REFERENCES alunos (matricula)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-) ENGINE=InnoDB;
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  matricula VARCHAR(11) NOT NULL,
+  codigo VARCHAR(255) NOT NULL,
+  gerado_em DATETIME NOT NULL,
+  CONSTRAINT fk_qrcodes_alunos FOREIGN KEY (matricula) REFERENCES alunos(matricula) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 ALTER USER 'ru_teste'@'localhost' IDENTIFIED BY 'ru_testePassword';
 CREATE USER 'ru_teste'@'localhost' IDENTIFIED BY 'ru_testePassword';
