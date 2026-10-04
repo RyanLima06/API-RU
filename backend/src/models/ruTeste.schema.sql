@@ -30,7 +30,8 @@ CREATE TABLE qrcodes (
   CONSTRAINT fk_qrcodes_alunos FOREIGN KEY (matricula) REFERENCES alunos(matricula) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-ALTER USER 'ru_teste'@'localhost' IDENTIFIED BY 'ru_testePassword';
-CREATE USER 'ru_teste'@'localhost' IDENTIFIED BY 'ru_testePassword';
+CREATE USER 'ru_user'@'localhost' IDENTIFIED BY 'ru_testePassword';
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON ru_teste.* TO 'ru_teste'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON ru_teste.* TO 'ru_user'@'localhost';
+
+FLUSH PRIVILEGES;

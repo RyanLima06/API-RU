@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 const hash = (valor) => crypto.createHash("sha256").update(String(valor)).digest();
 
 export const verificarChave = (req, res, next) => {
-  const chaveEsperada = process.env.API_KEY;
+  const chaveEsperada = process.env.API_KEY ;
 
   if (!chaveEsperada) {
     console.error("API_KEY não está definida no .env");

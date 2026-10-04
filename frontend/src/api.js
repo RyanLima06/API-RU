@@ -1,20 +1,13 @@
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 
-// Data usada quando ainda não existe sincronização anterior: força a API
-// a devolver foto e QR code na primeira consulta.
-const EPOCA = "1970-01-01T00:00:00";
-
+const EPOCA = "2026-09-20T08:00:00";
 const CHAVE_STORAGE = "ru_cracha";
 
-// Formato salvo no localStorage:
-// { matricula, ultimaSincronizacao, nome, saldo, DHAtualizacaoSaldo, foto, strQrCode }
 export function lerCache() {
   try {
     const bruto = localStorage.getItem(CHAVE_STORAGE);
     return bruto ? JSON.parse(bruto) : null;
-    console.log("Cache lido:", bruto);
   } catch {
-    // localStorage indisponível (modo privado, por exemplo) ou JSON corrompido
     return null;
   }
 }
@@ -23,7 +16,7 @@ export function salvarCache(dados) {
   try {
     localStorage.setItem(CHAVE_STORAGE, JSON.stringify(dados));
   } catch {
-    // se não der para gravar, a próxima consulta simplesmente baixa tudo de novo
+    /* ignora */
   }
 }
 
@@ -35,7 +28,6 @@ export function limparCache() {
   }
 }
 
-// Monta a URL completa da foto (o backend devolve um caminho relativo, ex.: "fotos/xxx.jpg")
 export function urlDaFoto(caminhoOuBase64) {
   if (!caminhoOuBase64) return null;
   if (caminhoOuBase64.startsWith("data:")) {
@@ -45,10 +37,13 @@ export function urlDaFoto(caminhoOuBase64) {
 }
 
 export async function buscarSaldo(matricula, cacheAnterior) {
-  const data = cacheAnterior?.ultimaSincronizacao ?? EPOCA;
+  // CORREÇÃO: Só considera o cache se for da MESMA matrícula digitada
+  const ehMesmaMatricula = cacheAnterior?.matricula === matricula;
+  const cacheValido = ehMesmaMatricula ? cacheAnterior : null;
 
-  // Rota sem chave: quem exige "X-API-Key" é só "/saldo", usada por
-  // ferramentas externas. O front nunca guarda nem envia a chave.
+  // Se for outro aluno, envia a EPOCA (1970) para forçar baixar a foto dele
+  const data = cacheValido?.ultimaSincronizacao ?? EPOCA;
+
   const resposta = await fetch(`${API_URL}/web/saldo`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -63,16 +58,15 @@ export async function buscarSaldo(matricula, cacheAnterior) {
     throw erro;
   }
 
-  // foto e strQrCode só vêm quando mudaram; senão a API manda null e
-  // a gente mantém o que já estava salvo do celular/navegador.
+  // Se a API mandou null (nada mudou), mantém a foto/QR apenas se for o mesmo aluno
   const mesclado = {
     matricula: corpo.matricula,
     ultimaSincronizacao: new Date().toISOString().slice(0, 19),
     nome: corpo.nome,
     saldo: corpo.saldo,
     DHAtualizacaoSaldo: corpo.DHAtualizacaoSaldo,
-    foto: corpo.foto ?? cacheAnterior?.foto ?? null,
-    strQrCode: corpo.strQrCode ?? cacheAnterior?.strQrCode ?? null,
+    foto: corpo.foto ?? cacheValido?.foto ?? null,
+    strQrCode: corpo.strQrCode ?? cacheValido?.strQrCode ?? null,
   };
 
   salvarCache(mesclado);
