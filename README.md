@@ -96,7 +96,7 @@ npm install
 O frontend lê a URL da API via `import.meta.env.VITE_API_URL`. Crie um `.env` dentro de `frontend/`:
 
 ```dotenv
-VITE_API_URL=url-da-api-aqui
+VITE_API_URL=url-da-api-do-backend-aqui
 ```
 
 ### 3.3 Rodar o frontend
