@@ -1,7 +1,7 @@
 # Saldo do RU
 
 Projeto com dois lados:
-- **`backend/`** — API em Node.js que consulta saldo, foto e QR code dos alunos no MySQL.
+- **`backend/`** — API em Node.js que consulta saldo, foto e QR code dos alunos no banco.
 - **`frontend/`** — interface em React (Vite) que mostra a "carteirinha digital" do aluno.
 
 ## Pré-requisitos
@@ -49,27 +49,15 @@ DB_HOST=localhost
 DB_USER=ru_app
 DB_PASS=escolha_uma_senha_forte
 DB_NAME=ru_teste
-API_KEY=gere_uma_chave_aleatoria
+API_KEY=senha-da-api-aqui
 
 DB_SETUP_USER=root
 DB_SETUP_PASS=senha_do_seu_root
 ```
 
-> O `.env` nunca é commitado (está no `.gitignore`). `DB_SETUP_USER`/`DB_SETUP_PASS` só são usados pelo script de setup, para criar o banco e as tabelas — a aplicação em si usa sempre `DB_USER`/`DB_PASS` (`ru_app`).
+>`DB_SETUP_USER`/`DB_SETUP_PASS` só são usados pelo script de setup, para criar o banco e as tabelas — a aplicação em si usa sempre `DB_USER`/`DB_PASS` (`ru_app`).
 
-### 2.3 Criar o usuário `ru_app` no MySQL
-
-Conecte no MySQL como `root` (pelo Workbench ou pelo terminal) e rode:
-
-```sql
-CREATE USER 'ru_app'@'localhost' IDENTIFIED BY 'a_mesma_senha_que_voce_colocou_em_DB_PASS';
-GRANT SELECT, INSERT, UPDATE, DELETE ON ru_teste.* TO 'ru_app'@'localhost';
-FLUSH PRIVILEGES;
-```
-
-Esse usuário só tem permissão dentro do banco `ru_teste` — não pode criar nem apagar bancos, nem acessar outros.
-
-### 2.4 Criar e popular o banco (setup)
+### 2.3 Criar e popular o banco (setup) (O usuário `ru_app` no MySQL é criado automaticamente ao rodar o setup)
 
 ```bash
 node src/models/setup.js
@@ -82,7 +70,7 @@ Esse script:
 
 Pode ser rodado quantas vezes quiser para resetar os dados de teste.
 
-### 2.5 Rodar o backend
+### 2.4 Rodar o backend
 
 ```bash
 node src/appRU.js
@@ -110,8 +98,6 @@ O frontend lê a URL da API via `import.meta.env.VITE_API_URL`. Crie um `.env` d
 ```dotenv
 VITE_API_URL=http://localhost:3000
 ```
-
-> No Vite, variáveis expostas ao navegador precisam começar com `VITE_`. Crie também um `frontend/.env.example` com `VITE_API_URL=` vazio, para seguir o mesmo padrão do backend.
 
 ### 3.3 Rodar o frontend
 
@@ -166,4 +152,3 @@ Saldo-do-RU/
 - Nenhuma senha ou chave fica no código: tudo vem dos arquivos `.env` (um em `backend/`, outro em `frontend/`).
 - Os `.env` estão no `.gitignore` e nunca devem ser commitados.
 - O backend usa o usuário `ru_app`, com permissão apenas no banco `ru_teste` — nunca o `root`.
-- Se uma credencial for commitada por engano, trocar a senha é obrigatório (apagar o arquivo depois não remove do histórico do Git).

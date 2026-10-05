@@ -20,8 +20,6 @@ async function rodarSetup() {
     console.log(" Conectando ao MySQL");
     conexao = await mysql.createConnection(dbConfig);
 
-    // Ajuste os caminhos caso seus arquivos .sql estejam em outro local
-    // (Por padrão considera que schema.sql e seed.sql estão na raiz do projeto)
     const caminhoSchema = path.resolve(__dirname, "../../src/models/ruTeste.schema.sql");
     const caminhoSeed = path.resolve(__dirname, "../../src/models/ruTeste.seeds.sql");
 

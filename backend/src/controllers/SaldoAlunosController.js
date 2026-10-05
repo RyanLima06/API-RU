@@ -24,10 +24,10 @@ function paraDatetimeMySQL(texto) {
   return existe ? `${m[1]}-${m[2]}-${m[3]} ${m[4]}:${m[5]}:${m[6]}` : null;
 }
 
+
 const transformarParaISO = (dt) => (dt ? dt.replace(" ", "T") : null);
 
-
-
+//construção para aprecer a imagem na carteirinha.
 function paraDataUri(bufferFoto) {
   if (!bufferFoto || bufferFoto.length === 0) return null;
 
@@ -60,8 +60,6 @@ export const buscarSaldo = async (req, res) => {
       });
     }
     
-    
-
     const [linhas] = await pool.execute(
       `SELECT a.matricula,
               a.nome,
@@ -89,12 +87,12 @@ export const buscarSaldo = async (req, res) => {
     
     const aluno = linhas[0];
 
-    // CORREÇÃO: Converter ambas as datas para objetos Date válidos do JS
+    //Converter ambas as datas para objetos Date válidos do JS
     const dataCliente = new Date(data);
     const dataFoto = aluno.foto_atualizada_em ? new Date(aluno.foto_atualizada_em) : null;
     const dataQr = aluno.qrcode_gerado_em ? new Date(aluno.qrcode_gerado_em) : null;
 
-    // Se o cliente enviar EPOCA (1970) ou data antiga, fotoMudou será TRUE
+    // Se o cliente enviar EPOCA (1970) ou data antiga, fotoMudou será TRUE (isso para requisições vindas do frontend)
     const fotoMudou = dataFoto && dataFoto > dataCliente;
     const qrMudou = dataQr && dataQr > dataCliente;
 

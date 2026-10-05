@@ -18,4 +18,5 @@ router.use(
 router.use(express.json());
 
 router.post("/saldo", verificarChave, buscarSaldo);
+//essa é outra rota para proteger/esconder a chave da api 
 router.post("/web/saldo", buscarSaldo);

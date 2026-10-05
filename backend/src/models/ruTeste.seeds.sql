@@ -1,9 +1,4 @@
--- =====================================================================
--- Dados de teste do RU (Restaurante Universitário)
--- Requer a tabela alunos com: foto MEDIUMBLOB NULL
---
--- Data base para os testes de sincronização: 2026-09-20 08:00:00
---
+
 -- REGRAS DA SINCRONIZAÇÃO DA API:
 -- 1. saldo, nome e DHAtualizacaoSaldo: vão SEMPRE (se existir saldo).
 -- 2. foto: enviada só se (foto_atualizada_em > data); senão null.
@@ -43,7 +38,7 @@ TRUNCATE TABLE saldos;
 TRUNCATE TABLE alunos;
 SET FOREIGN_KEY_CHECKS = 1;
 
--- Binário VÁLIDO de imagem PNG em Base64 (1x1 pixel transparente)
+-- Binário VÁLIDO de imagem PNG em Base64 (1x1 pixel transparente(roxo, na verdade.))
 SET @foto_padrao = FROM_BASE64(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
 );
@@ -151,9 +146,7 @@ INSERT INTO qrcodes (matricula, codigo, gerado_em) VALUES
 ('20251200020', 'RU-20251200020-01', '2026-09-20 06:00:00'),
 ('20251200020', 'RU-20251200020-02', '2026-09-20 18:30:00');
 
--- =====================================================================
--- CONFERÊNCIA DE DADOS
--- =====================================================================
+-- CONFERÊNCIA DE DADOS (checa se está tudo ok, aparece no workbench.)
 SELECT
     (SELECT COUNT(*) FROM alunos)  AS total_alunos,
     (SELECT COUNT(*) FROM saldos)  AS total_saldos,
