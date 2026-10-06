@@ -31,18 +31,7 @@ npm install
 
 ### 2.2 Configurar as variáveis de ambiente
 
-Copie o arquivo de exemplo e preencha com seus próprios valores:
-
-```bash
-cp .env.example .env
-```
-
-No Windows (PowerShell):
-```powershell
-Copy-Item .env.example .env
-```
-
-Abra o `backend/.env` e preencha:
+Crie um .env e depois abra o `backend/.env` e preencha:
 
 ```dotenv
 DB_HOST=localhost
