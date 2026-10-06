@@ -31,12 +31,12 @@ npm install
 
 ### 2.2 Configurar as variáveis de ambiente
 
-Crie um .env e depois abra o `backend/.env` e preencha:
+Crie um .env e depois abra o `backend/.env` (FORA DO /SRC) e preencha:
 
 ```dotenv
 DB_HOST=localhost
-DB_USER=ru_app
-DB_PASS=escolha_uma_senha_forte
+DB_USER=ru_user
+DB_PASS=senha-aqui
 DB_NAME=ru_teste
 API_KEY=senha-da-api-aqui
 
