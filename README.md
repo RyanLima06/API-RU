@@ -44,9 +44,9 @@ DB_SETUP_USER=root
 DB_SETUP_PASS=senha_do_seu_root
 ```
 
->`DB_SETUP_USER`/`DB_SETUP_PASS` só são usados pelo script de setup, para criar o banco e as tabelas — a aplicação em si usa sempre `DB_USER`/`DB_PASS` (`ru_app`).
+>`DB_SETUP_USER`/`DB_SETUP_PASS` só são usados pelo script de setup, para criar o banco e as tabelas — a aplicação em si usa sempre `DB_USER`/`DB_PASS` (`ru_user`).
 
-### 2.3 Criar e popular o banco (setup) (O usuário `ru_app` no MySQL é criado automaticamente ao rodar o setup)
+### 2.3 Criar e popular o banco (setup) (O usuário `ru_user` no MySQL é criado automaticamente ao rodar o setup)
 
 ```bash
 node src/models/setup.js
@@ -65,7 +65,7 @@ Pode ser rodado quantas vezes quiser para resetar os dados de teste.
 node src/appRU.js
 ```
 
-A aplicação se conecta ao banco usando `DB_USER`/`DB_PASS` (`ru_app`), nunca o `root`. Por padrão sobe em `http://localhost:3000` (ajuste se a porta configurada em `src/appRU.js` for outra).
+A aplicação se conecta ao banco usando `DB_USER`/`DB_PASS` (`ru_user`), nunca o `root`. Por padrão sobe em `http://localhost:3000` (ajuste se a porta configurada em `src/appRU.js` for outra).
 
 ---
 
@@ -112,7 +112,7 @@ Saldo-do-RU/
 │   │   │   ├── ruTeste.seeds.sql    # popula com dados fictícios
 │   │   │   └── setup.js             # roda schema + seed
 │   │   ├── appRU.js                 # ponto de entrada da API
-│   │   ├── db.js                    # conexão com o MySQL (usa ru_app)
+│   │   ├── db.js                    # conexão com o MySQL (usa ru_user)
 │   │   └── routes.js
 │   ├── .env                         # credenciais locais (NÃO vai para o Git)
 │   ├── .env.example
