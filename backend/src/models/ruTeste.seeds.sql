@@ -146,6 +146,7 @@ INSERT INTO qrcodes (matricula, codigo, gerado_em) VALUES
 ('20251200020', 'RU-20251200020-01', '2026-09-20 06:00:00'),
 ('20251200020', 'RU-20251200020-02', '2026-09-20 18:30:00');
 
+
 -- CONFERÊNCIA DE DADOS (checa se está tudo ok, aparece no workbench.)
 SELECT
     (SELECT COUNT(*) FROM alunos)  AS total_alunos,

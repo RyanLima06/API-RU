@@ -2,7 +2,7 @@ import express, { Router } from "express";
 import cors from "cors";
 import { verificarChave } from "./middleweares/verificarChaveApi.js";
 import { buscarSaldo } from "./controllers/SaldoAlunosController.js";
-
+import { recarga } from "./controllers/RecargaController.js";
 export const router = Router();
 
 const origemFrontend = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
@@ -20,3 +20,5 @@ router.use(express.json());
 router.post("/saldo", verificarChave, buscarSaldo);
 //essa é outra rota para proteger/esconder a chave da api 
 router.post("/web/saldo", buscarSaldo);
+
+router.post("/recarga", verificarChave, recarga);
