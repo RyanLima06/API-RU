@@ -18,7 +18,9 @@ router.use(
 router.use(express.json());
 
 router.post("/saldo", verificarChave, buscarSaldo);
-//essa é outra rota para proteger/esconder a chave da api 
+//essa é outra rota para proteger/esconder a chave da api:
 router.post("/web/saldo", buscarSaldo);
 
 router.post("/recarga", verificarChave, recarga);
+//essa é outra rota para proteger/esconder a chave da api:
+router.post("/web/recarga", recarga);

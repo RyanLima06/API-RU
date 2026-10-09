@@ -1,0 +1,241 @@
+:root {
+  --verde-petroleo: #0f2a28;
+  --marfim: #fbf7ee;
+  --tinta: #14201f;
+  --dourado: #c9a24b;
+  --vermelho: #b3413a;
+  --linha: #d8d0bd;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--verde-petroleo);
+  background-image: radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.05), transparent 45%);
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  color: var(--tinta);
+}
+
+.pagina {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.cartao {
+  width: 100%;
+  max-width: 360px;
+  background: var(--marfim);
+  border-radius: 18px;
+  padding: 32px 28px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.rotulo {
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(20, 32, 31, 0.6);
+  margin-bottom: 4px;
+}
+
+/* -- Formulário -------------------------------------------------- */
+
+.formulario h1 {
+  font-family: "Fraunces", serif;
+  font-size: 1.6rem;
+  margin: 0 0 6px;
+}
+
+.legenda {
+  margin: 0 0 20px;
+  color: rgba(20, 32, 31, 0.7);
+  font-size: 0.9rem;
+}
+
+.campo-matricula {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--linha);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  margin-bottom: 14px;
+}
+
+.campo-matricula:focus-visible {
+  outline: 2px solid var(--verde-petroleo);
+  outline-offset: 1px;
+}
+
+/* -- Crachá --------------------------------------------------------- */
+
+.cracha-topo {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.cracha-foto {
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--linha);
+}
+
+.cracha-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cracha-foto-vazia {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--linha),
+    var(--linha) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+
+.cracha-nome {
+  font-family: "Fraunces", serif;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  margin: 0 0 4px;
+}
+
+.cracha-matricula {
+  font-size: 0.85rem;
+  color: rgba(20, 32, 31, 0.6);
+  letter-spacing: 0.02em;
+}
+
+.cracha-saldo {
+  margin-bottom: 20px;
+}
+
+.cracha-saldo-valor {
+  font-family: "Fraunces", serif;
+  font-size: 2rem;
+  color: var(--dourado);
+}
+
+.linha-corte {
+  border: none;
+  border-top: 2px dashed var(--linha);
+  margin: 0 -28px 20px;
+}
+
+.cracha-qrcode {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 4px;
+  min-height: 168px;
+  align-items: center;
+}
+
+.cracha-acoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+/* -- Botões e mensagens --------------------------------------------- */
+
+button {
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 11px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: var(--verde-petroleo);
+  color: var(--marfim);
+  flex: 1;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--dourado);
+  outline-offset: 2px;
+}
+
+.botao-secundario {
+  background: transparent;
+  color: var(--verde-petroleo);
+  border: 1px solid var(--linha);
+}
+
+.formulario button {
+  width: 100%;
+}
+
+.mensagem-erro {
+  color: var(--vermelho);
+  font-size: 0.85rem;
+  margin: 10px 0 0;
+}
+
+.mensagem-sucesso {
+  color: #2f6b4f;
+  font-size: 0.85rem;
+  margin: 10px 0 0;
+}
+
+.campo-rotulo {
+  display: block;
+  font-size: 0.8rem;
+  margin: 14px 0 6px;
+  color: rgba(20, 32, 31, 0.75);
+}
+
+.campo-rotulo:first-of-type {
+  margin-top: 0;
+}
+
+.formulario .campo-matricula {
+  margin-bottom: 0;
+}
+
+.link-rodape {
+  display: block;
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: var(--verde-petroleo);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cartao {
+    animation: aparecer 0.25s ease-out;
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

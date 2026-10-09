@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import  { Link }  from "react-router-dom";
 import { buscarSaldo, lerCache, limparCache, urlDaFoto } from "../../api.js";
 import "./style.css";
-export default function App() {
+export default function Home() {
   const [dados, setDados] = useState(() => lerCache());
   const [matriculaDigitada, setMatriculaDigitada] = useState("");
   const [carregando, setCarregando] = useState(false);
@@ -107,7 +108,7 @@ function Cracha({ dados, carregando, erro, onAtualizar, onTrocar }) {
       <div className="cracha-topo">
         <div className="cracha-foto">
           {foto ? (
-            <img src={foto} alt={`Foto de ${dados.nome}`} /> // <-- Usar 'foto' processada
+            <img src={foto} alt={`Foto de ${dados.nome}`} /> //  Usar 'foto' processada
           ) : (
             <div className="cracha-foto-vazia" aria-hidden="true" />
           )}
@@ -148,6 +149,11 @@ function Cracha({ dados, carregando, erro, onAtualizar, onTrocar }) {
         <button type="button" className="botao-secundario" onClick={onTrocar}>
           Trocar matrícula
         </button>
+      </div>
+      <div>
+          <Link className="link-rodape" to="/recarga">
+            Recarregar saldo
+          </Link>
       </div>
     </div>
   );

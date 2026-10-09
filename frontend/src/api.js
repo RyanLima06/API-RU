@@ -37,9 +37,9 @@ export function urlDaFoto(caminhoOuBase64) {
 }
 
 export async function buscarSaldo(matricula, cacheAnterior) {
-  // CORREÇÃO: Só considera o cache se for da MESMA matrícula digitada
-  const ehMesmaMatricula = cacheAnterior?.matricula === matricula;
-  const cacheValido = ehMesmaMatricula ? cacheAnterior : null;
+  // Só considera o cache se for da MESMA matrícula digitada
+  const MesmaMatricula = cacheAnterior?.matricula === matricula;
+  const cacheValido = MesmaMatricula ? cacheAnterior : null;
 
   // Se for outro aluno, envia a EPOCA (1970) para forçar baixar a foto dele
   const data = cacheValido?.ultimaSincronizacao ?? EPOCA;
@@ -71,4 +71,24 @@ export async function buscarSaldo(matricula, cacheAnterior) {
 
   salvarCache(mesclado);
   return mesclado;
+}
+
+export async function recarregar(matricula, valor, operador) {
+  const respostaRecarga = await fetch(`${API_URL}/web/recarga`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ matricula, valor, operador }),
+  });
+  const corpo = await respostaRecarga.json().catch(() => ({}));
+
+  if (!respostaRecarga.ok) {
+    const erro = new Error(corpo.erro || `Erro ${respostaRecarga.status}`);
+    erro.status = respostaRecarga.status;
+    throw erro;
+  }
+  const mesclar = {
+    saldo: corpo.saldo,
+    ultimaSincronizacao: new Date().toISOString().slice(0, 19),
+  };
+  return mesclar;
 }

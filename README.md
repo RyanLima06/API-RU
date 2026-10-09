@@ -140,4 +140,4 @@ Saldo-do-RU/
 
 - Nenhuma senha ou chave fica no código: tudo vem dos arquivos `.env` (um em `backend/`, outro em `frontend/`).
 - Os `.env` estão no `.gitignore` e nunca devem ser commitados.
-- O backend usa o usuário `ru_app`, com permissão apenas no banco `ru_teste` — nunca o `root`.
+- O backend usa o usuário `ru_user`, ou o `UsuarioPadrao` dependendo do que precisar, com permissão apenas no banco `ru_teste` — nunca o `root`.
