@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import  { Link }  from "react-router-dom";
-import { buscarSaldo, lerCache, limparCache, urlDaFoto } from "../../api.js";
+import { buscarSaldo, lerCache, limparCache, urlDaFoto } from "../../services/api.js";
 import "./style.css";
 export default function Home() {
   const [dados, setDados] = useState(() => lerCache());

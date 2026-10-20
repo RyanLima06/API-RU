@@ -2,16 +2,16 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import mysql from "mysql2/promise";
+import bcrypt from "bcryptjs";
 import "dotenv/config";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configurações da conexão direta (com suporte a múltiplos comandos SQL)
 const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_SETUP_USER,
   password: process.env.DB_SETUP_PASS,
-  multipleStatements: true, // Necessário para executar arquivos .sql com vários comandos
+  multipleStatements: true,
 };
 
 async function rodarSetup() {
@@ -32,6 +32,24 @@ async function rodarSetup() {
     const sqlSeed = await fs.readFile(caminhoSeed, "utf-8");
     await conexao.query(sqlSeed);
     console.log(" Seed executado com sucesso!");
+
+    // Operador inicial (senha vem do .env, nunca do seed.sql)
+    const { ADMIN_USUARIO, ADMIN_NOME, ADMIN_SENHA } = process.env;
+    if (ADMIN_USUARIO && ADMIN_SENHA) {
+      if (ADMIN_SENHA.length < 8) {
+        throw new Error("ADMIN_SENHA deve ter pelo menos 8 caracteres");
+      }
+      console.log(" Criando operador inicial...");
+      const hash = await bcrypt.hash(ADMIN_SENHA, 12);
+      await conexao.execute(
+        "INSERT INTO operadores (usuario, nome, senha_hash) VALUES (?, ?, ?)",
+        [ADMIN_USUARIO, ADMIN_NOME || ADMIN_USUARIO, hash]
+      );
+      console.log(` Operador '${ADMIN_USUARIO}' criado!`);
+    } else {
+      console.log(" ADMIN_USUARIO/ADMIN_SENHA não definidos: nenhum operador criado.");
+      console.log(" Use: npm run criar-operador -- <usuario> \"<Nome>\" <senha>");
+    }
 
     console.log(" Banco de dados resetado e pronto para uso!");
   } catch (erro) {
