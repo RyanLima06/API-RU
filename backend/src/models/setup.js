@@ -14,9 +14,25 @@ const dbConfig = {
   multipleStatements: true,
 };
 
+// Lê o .sql e troca o placeholder {{DB_PASS}} pela senha do .env,
+// já escapada e entre aspas (por isso o placeholder fica sem aspas no .sql)
+async function lerSql(caminho, conexao, senhaApp) {
+  const bruto = await fs.readFile(caminho, "utf-8");
+  const sql = bruto.replaceAll("{{DB_PASS}}", () => conexao.escape(senhaApp));
+  if (sql.includes("{{")) {
+    throw new Error(`Placeholder não resolvido em ${path.basename(caminho)}`);
+  }
+  return sql;
+}
+
 async function rodarSetup() {
   let conexao;
   try {
+    const senhaApp = process.env.DB_PASS;
+    if (!senhaApp || senhaApp.length < 8) {
+      throw new Error("DB_PASS não definida (ou menor que 8 caracteres) no .env");
+    }
+
     console.log(" Conectando ao MySQL");
     conexao = await mysql.createConnection(dbConfig);
 
@@ -24,13 +40,11 @@ async function rodarSetup() {
     const caminhoSeed = path.resolve(__dirname, "../../src/models/ruTeste.seeds.sql");
 
     console.log(" Criando banco e tabelas (schema.sql)...");
-    const sqlSchema = await fs.readFile(caminhoSchema, "utf-8");
-    await conexao.query(sqlSchema);
+    await conexao.query(await lerSql(caminhoSchema, conexao, senhaApp));
     console.log(" Schema executado com sucesso!");
 
     console.log(" Populando banco de dados (seed.sql)...");
-    const sqlSeed = await fs.readFile(caminhoSeed, "utf-8");
-    await conexao.query(sqlSeed);
+    await conexao.query(await lerSql(caminhoSeed, conexao, senhaApp));
     console.log(" Seed executado com sucesso!");
 
     // Operador inicial (senha vem do .env, nunca do seed.sql)
@@ -48,7 +62,7 @@ async function rodarSetup() {
       console.log(` Operador '${ADMIN_USUARIO}' criado!`);
     } else {
       console.log(" ADMIN_USUARIO/ADMIN_SENHA não definidos: nenhum operador criado.");
-      console.log(" Use: npm run criar-operador -- <usuario> \"<Nome>\" <senha>");
+      console.log(' Use: node src/criarOperador.js <usuario> "<Nome>" <senha>');
     }
 
     console.log(" Banco de dados resetado e pronto para uso!");
@@ -59,5 +73,4 @@ async function rodarSetup() {
     if (conexao) await conexao.end();
   }
 }
-
 rodarSetup();

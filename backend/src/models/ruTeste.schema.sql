@@ -51,7 +51,8 @@ CREATE TABLE logs_alteracoes (
   CONSTRAINT fk_logs_alteracoes_alunos FOREIGN KEY (matricula) REFERENCES alunos(matricula) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE USER IF NOT EXISTS 'ru_user'@'localhost' IDENTIFIED BY 'ru_testePassword';
+CREATE USER IF NOT EXISTS 'ru_user'@'localhost' IDENTIFIED BY {{DB_PASS}};
+ALTER USER 'ru_user'@'localhost' IDENTIFIED BY {{DB_PASS}};
 GRANT SELECT, INSERT, UPDATE, DELETE ON ru_teste.* TO 'ru_user'@'localhost';
 
 CREATE USER IF NOT EXISTS 'UserPadrao'@'localhost' IDENTIFIED BY 'UserPadraoPassword';
