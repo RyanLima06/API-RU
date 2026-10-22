@@ -5,6 +5,8 @@ import { pool } from "../db.js";
 // Hash falso: o tempo de resposta é o mesmo com usuário existente ou não
 const HASH_FALSO = bcrypt.hashSync("senha-falsa", 12);
 
+const conn = await pool.getConnection();
+
 export const login = async (req, res) => {
   try {
     const { usuario, senha } = req.body ?? {};
@@ -12,7 +14,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ erro: "Informe usuário e senha" });
     }
 
-    const [linhas] = await pool.execute(
+    const [linhas] = await conn.execute(
       "SELECT id, nome, senha_hash FROM operadores WHERE usuario = ? AND ativo = 1",
       [usuario]
     );
@@ -33,5 +35,7 @@ export const login = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ erro: "Erro interno" });
-  }
+  }finally {
+      conn.release(); // devolve a conexão pro pool
+    }
 };

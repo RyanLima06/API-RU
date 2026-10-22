@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL;
 const CHAVE_TOKEN = "ru_operador";
 
 const EPOCA = "2026-09-20T08:00:00";

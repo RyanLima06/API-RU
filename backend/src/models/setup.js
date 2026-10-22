@@ -15,7 +15,6 @@ const dbConfig = {
 };
 
 // Lê o .sql e troca o placeholder {{DB_PASS}} pela senha do .env,
-// já escapada e entre aspas (por isso o placeholder fica sem aspas no .sql)
 async function lerSql(caminho, conexao, senhaApp) {
   const bruto = await fs.readFile(caminho, "utf-8");
   const sql = bruto.replaceAll("{{DB_PASS}}", () => conexao.escape(senhaApp));

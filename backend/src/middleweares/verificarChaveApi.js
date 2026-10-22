@@ -7,13 +7,13 @@ export const verificarChave = (req, res, next) => {
 
   if (!chaveEsperada) {
     console.error("API_KEY não está definida no .env");
-    return res.status(500).json({ erro: "Erro interno" });
+    return res.status(500).json({ error: "Erro interno" });
   }
 
   const recebida = req.get("X-API-Key");
 
   if (!recebida || !crypto.timingSafeEqual(hash(recebida), hash(chaveEsperada))) {
-    return res.status(401).json({ erro: "Chave de API inválida" });
+    return res.status(401).json({ error: "Chave de API inválida" });
   }
 
   next();

@@ -8,20 +8,20 @@ export const recarga = async (req, res) => {
     const { matricula, valor } = req.body;
     const operador = req.operador?.nome ?? req.body.operador;
     if (ausente(matricula))
-      return res.status(400).json({ erro: "Campo 'matricula' é obrigatório" });
+      return res.status(400).json({ error: "Campo 'matricula' é obrigatório" });
     if (ausente(valor))
-      return res.status(400).json({ erro: "Campo 'valor' é obrigatório" });
+      return res.status(400).json({ error: "Campo 'valor' é obrigatório" });
     if (ausente(operador))
-      return res.status(400).json({ erro: "Campo 'operador' é obrigatório" });
+      return res.status(400).json({ error: "Campo 'operador' é obrigatório" });
 
     if (typeof matricula !== "string" || !/^\d{11}$/.test(matricula)) {
       return res
         .status(400)
-        .json({ erro: "Campo 'matricula' deve ter 11 dígitos" });
+        .json({ error: "Campo 'matricula' deve ter 11 dígitos" });
     }
 
     if (typeof operador !== "string" || operador.trim() === "") {
-      return res.status(400).json({ erro: "Campo 'operador' é obrigatório" });
+      return res.status(400).json({ error: "Campo 'operador' é obrigatório" });
     }
     let valorRecarga;
     try {
@@ -31,7 +31,7 @@ export const recarga = async (req, res) => {
       if (valorRecarga.lte(0)) {
         return res
           .status(400)
-          .json({ erro: "Campo 'valor' deve ser um número positivo" });
+          .json({ error: "Campo 'valor' deve ser um número positivo" });
       }
     } catch {
       return res
@@ -50,7 +50,7 @@ export const recarga = async (req, res) => {
 
       if (resultados.length === 0) {
         await conn.query("ROLLBACK");
-        return res.status(404).json({ message: "Matrícula não encontrada" });
+        return res.status(404).json({ error: "Matrícula não encontrada" });
       }
 
       const saldoAnterior = new Decimal(resultados[0].saldo);
@@ -92,8 +92,9 @@ export const recarga = async (req, res) => {
     } finally {
       conn.release(); // devolve a conexão pro pool
     }
+    
   } catch (error) {
     console.error("Erro geral ao processar recarga:", error);
-    return res.status(500).json({ message: "Erro interno do servidor" });
+    return res.status(500).json({ error: "Erro interno do servidor" });
   }
 };

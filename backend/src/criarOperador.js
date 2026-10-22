@@ -23,11 +23,11 @@ try {
     [usuario, nome, hash]
   );
   console.log("Operador criado:", usuario);
-} catch (erro) {
-  if (erro.code === "ER_DUP_ENTRY") {
+} catch (error) {
+  if (error.code === "ER_DUP_ENTRY") {
     console.error(`O usuário '${usuario}' já existe.`);
   } else {
-    console.error("Erro ao criar operador:", erro.message);
+    console.error("Erro ao criar operador:", error.message);
   }
   process.exit(1);
 } finally {

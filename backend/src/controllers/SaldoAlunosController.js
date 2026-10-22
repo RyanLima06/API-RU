@@ -27,7 +27,7 @@ function paraDatetimeMySQL(texto) {
 
 const transformarParaISO = (dt) => (dt ? dt.replace(" ", "T") : null);
 
-//construção para aprecer a imagem na carteirinha.
+//construção para aparecer a imagem na carteirinha.
 function paraDataUri(bufferFoto) {
   if (!bufferFoto || bufferFoto.length === 0) return null;
 
@@ -44,23 +44,25 @@ function paraDataUri(bufferFoto) {
   return `data:${tipo};base64,${bufferFoto.toString("base64")}`;
 }
 
+const conn = await pool.getConnection();
+
 export const buscarSaldo = async (req, res) => {
   try {
     const { matricula, data } = req.body ?? {};
     if (ausente(matricula)) return res.status(400).json({ erro: "Campo 'matricula' é obrigatório" });
     if (ausente(data)) return res.status(400).json({ erro: "Campo 'data' é obrigatório" });
     if (typeof matricula !== "string" || !RE_MATRICULA.test(matricula)) {
-      return res.status(400).json({ erro: "Campo 'matricula' deve ter 11 dígitos" });
+      return res.status(400).json({ error: "Campo 'matricula' deve ter 11 dígitos" });
     }
     
    const desde = typeof data === "string" ? paraDatetimeMySQL(data) : null;
     if (!desde) {
       return res.status(400).json({
-        erro: "Campo 'data' em formato inválido (use ISO 8601, ex.: 2026-09-20T08:00:00)",
+        error: "Campo 'data' em formato inválido (use ISO 8601, ex.: 2026-09-20T08:00:00)",
       });
     }
     
-    const [linhas] = await pool.execute(
+    const [linhas] = await conn.execute(
       `SELECT a.matricula,
               a.nome,
               a.foto,
@@ -82,7 +84,7 @@ export const buscarSaldo = async (req, res) => {
     );
 
     if (linhas.length === 0) {
-      return res.status(404).json({ erro: "Matrícula não encontrada" });
+      return res.status(404).json({ error: "Matrícula não encontrada" });
     }
     
     const aluno = linhas[0];
@@ -106,6 +108,8 @@ export const buscarSaldo = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ erro: "Erro interno" });
-  }
+    return res.status(500).json({ error: "Erro interno" });
+  }finally {
+      conn.release(); // devolve a conexão pro pool
+    }
 };

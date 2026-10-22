@@ -35,7 +35,7 @@ const limiteLogin = rateLimit({
   limit: 8,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { erro: "Muitas tentativas de login. Aguarde alguns minutos." },
+  message: { error: "Muitas tentativas de login. Aguarde alguns minutos." },
 });
 
 // Sistemas (catraca/integrações): chave de API
