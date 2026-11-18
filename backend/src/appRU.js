@@ -1,9 +1,15 @@
 import "dotenv/config";
 import express from "express";
 import { router } from "./routes.js";
-
+import { verificarChave } from "./middleweares/verificarChaveApi.js";
 const app = express();
 const PORT = 3000;
+
+
+if(!process.env.API_KEY){
+  console.error("Chave da API não está definida no .env");
+  res.status(500).json({ error: "Erro interno" });
+}
 
 app.use(router);
 

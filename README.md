@@ -16,7 +16,7 @@ Cada tipo de cliente tem a sua proteção:
 | `POST /saldo` | Sistemas (catraca, integrações) | Chave de API (header `X-API-Key`) |
 | `POST /recarga` | Sistemas (catraca, integrações) | Chave de API (header `X-API-Key`) |
 
-O estudante continua só digitando a matrícula. O login existe apenas na tela de recarga. A chave de API **não vai mais para o frontend**: ela é usada só por sistemas que falam direto com a API.
+O estudante só digita a matrícula. O login existe apenas na tela de recarga.
 
 ## Pré-requisitos
 
@@ -29,7 +29,7 @@ O estudante continua só digitando a matrícula. O login existe apenas na tela d
 
 ```bash
 git clone <url-do-repositorio>
-cd Saldo-do-RU
+cd API-RU
 ```
 
 ---
@@ -68,7 +68,7 @@ DB_SETUP_PASS=senha_do_seu_root
 API_KEY=chave-para-sistemas-externos
 JWT_SECRET=string-aleatoria-longa
 
-# Origem do frontend permitida no CORS
+# Origem do frontend permitida no CORS (MUDANÇA EM BREVE)
 FRONTEND_ORIGIN=http://localhost:5173
 
 # Operador inicial (criado pelo setup)
@@ -117,7 +117,7 @@ Formato: `<usuario> "<Nome completo>" <senha>`. A senha precisa ter pelo menos 8
 
 e use `npm run criar-operador -- maria "Maria Silva" senhaForte123` (o `--` é necessário para repassar os argumentos).
 
-Para listar os operadores existentes:
+Para listar os operadores existentes via mysql:
 
 ```sql
 SELECT id, usuario, nome, ativo FROM ru_teste.operadores;
@@ -131,7 +131,7 @@ Para desativar um operador sem apagá-lo, coloque `ativo = 0`.
 node src/appRU.js
 ```
 
-Sobe em `http://localhost:3000` por padrão (ajuste se a porta configurada em `src/appRU.js` for outra). O Node não recarrega sozinho: depois de alterar o código, pare (Ctrl+C) e suba de novo, ou use `node --watch src/appRU.js` em desenvolvimento.
+Sobe em `http://localhost:3000` por padrão (ajuste se a porta configurada em `src/appRU.js` for outra). O Node não recarrega sozinho: depois de alterar o código, pare (Ctrl+C) e suba de novo.
 
 Se o backend ficar atrás de um proxy (Nginx, Cloudflare etc.), adicione `app.set("trust proxy", 1);` no `appRU.js`, antes das rotas. Sem isso, o limite de requisições enxerga o IP do proxy e bloqueia todos os usuários juntos.
 

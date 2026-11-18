@@ -6,7 +6,7 @@ export const verificarChave = (req, res, next) => {
   const chaveEsperada = process.env.API_KEY ;
 
   if (!chaveEsperada) {
-    console.error("API_KEY não está definida no .env");
+    console.error("Chave da api não está definida no .env");
     return res.status(500).json({ error: "Erro interno" });
   }
 

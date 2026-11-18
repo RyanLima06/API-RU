@@ -1,5 +1,6 @@
 import express, { Router } from "express";
 import cors from "cors";
+import "dotenv/config";
 import { verificarChave } from "./middleweares/verificarChaveApi.js";
 import { buscarSaldo } from "./controllers/SaldoAlunosController.js";
 import { recarga } from "./controllers/RecargaController.js";
@@ -9,7 +10,7 @@ import rateLimit from "express-rate-limit";
 
 export const router = Router();
 
-const origemFrontend = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
+const origemFrontend = process.env.FRONTEND_ORIGIN;
 
 router.use(
   cors({
@@ -35,6 +36,7 @@ const limiteLogin = rateLimit({
   limit: 8,
   standardHeaders: true,
   legacyHeaders: false,
+  statusCode: 413,
   message: { error: "Muitas tentativas de login. Aguarde alguns minutos." },
 });
 
