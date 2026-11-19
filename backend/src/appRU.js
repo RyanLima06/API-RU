@@ -3,7 +3,8 @@ import express from "express";
 import { router } from "./routes.js";
 import { verificarChave } from "./middleweares/verificarChaveApi.js";
 const app = express();
-const PORT = 3000;
+app.set("trust proxy", 1); // <-- Coloque aqui no appRU.js!
+const PORT = 8080;
 
 
 if(!process.env.API_KEY){
@@ -21,4 +22,4 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Erro interno" });
 });
 
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+  app.listen(PORT, "0.0.0.0", () => console.log(`Servidor rodando na porta ${PORT}`));

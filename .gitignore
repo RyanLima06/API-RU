@@ -1,5 +1,14 @@
+# Variáveis de ambiente e segredos
 .env
+.env.*
+!.env.example
+nginx/certs/
+
+# Dependências e travas de plataforma
 node_modules/
+**/node_modules/
+package-lock.json
+**/package-lock.json
 vendor/
 
 # Logs
@@ -11,10 +20,16 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
+# Builds e caches (Vite / React)
 dist
 dist-ssr
+.vite/
 *.local
+
+# Banco de dados local / Backups
+mysql_data/
+*.dump
+*.sql.gz
 
 # Editor directories and files
 .vscode/*

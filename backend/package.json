@@ -1,0 +1,37 @@
+{
+  "name": "saldo-do-ru",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch src/server.js",
+    "db:setup": "node src/models/setup.js",
+    "criar-operador": "node src/criarOperador.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "decimal.js": "^10.6.0",
+    "dotenv": "^18.0.3",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
+    "i": "^0.3.7",
+    "jsonwebtoken": "^9.0.3",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.24.4",
+    "npm": "^11.21.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RyanLima06/Saldo-do-RU.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RyanLima06/Saldo-do-RU/issues"
+  },
+  "homepage": "https://github.com/RyanLima06/Saldo-do-RU#readme"
+}
